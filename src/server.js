@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { z } from 'zod';
 import { processQuestion } from './chat.js';
+import { saveQuestion, getQuestions } from './store.js';
 
 dotenv.config();
 
@@ -42,6 +43,12 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
+// View saved questions
+app.get('/questions', (_req, res) => {
+  const questions = getQuestions();
+  res.json(questions);
+});
+
 // Chat endpoint
 app.post('/chat', async (req, res) => {
   try {
@@ -68,6 +75,9 @@ app.post('/chat', async (req, res) => {
     }
 
     res.json(valid.data);
+
+    // Save to log
+    saveQuestion({ question: parsed.data.question, answer: valid.data });
   } catch (err) {
     console.error('Chat error:', err.message);
     res.status(500).json({
