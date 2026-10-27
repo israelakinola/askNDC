@@ -378,8 +378,16 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
 .prompt-chips--mobile { display: none; }
 
+.prompt-chips--mobile .prompt-chip {
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
+}
+
 @media (max-width: 900px) {
-  body:not(.has-conversation) .prompt-chips--mobile { display: flex; }
+  body:not(.has-conversation) .prompt-chips--mobile {
+    display: flex;
+  }
   .prompt-chips--mobile .prompt-chip {
     max-width: 100%;
     border-radius: 14px;

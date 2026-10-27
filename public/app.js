@@ -50,8 +50,8 @@ function initializeChat() {
 }
 
 function renderPromptChips() {
-  const sidebarChips = document.getElementById("sidebar-chips");
-  const mobileChips = document.getElementById("mobile-chips");
+  const containers = document.querySelectorAll("[data-chip-list]");
+  if (!containers.length) return;
 
   const frag = document.createDocumentFragment();
   promptChips.forEach((label) => {
@@ -62,8 +62,9 @@ function renderPromptChips() {
     frag.appendChild(btn.cloneNode(true));
   });
 
-  if (sidebarChips) sidebarChips.replaceChildren(frag.cloneNode(true));
-  if (mobileChips) mobileChips.replaceChildren(frag);
+  containers.forEach((container) => {
+    container.replaceChildren(frag.cloneNode(true));
+  });
 }
 
 function autoGrowInput() {
