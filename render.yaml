@@ -4,6 +4,10 @@ services:
     env: node
     buildCommand: npm install
     startCommand: node src/server.js
+    disk:
+      name: askndc-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
     envVars:
       - key: QDRANT_URL
         sync: false

@@ -1,12 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const LOG_FILE = path.resolve('data', 'questions.json');
+// Use Render's persistent disk when available (mounted at /opt/render/project/src/data)
+const DATA_DIR = fs.existsSync('/opt/render/project/src/data')
+  ? '/opt/render/project/src/data'
+  : path.resolve('data');
+
+const LOG_FILE = path.join(DATA_DIR, 'questions.json');
 
 // Ensure data directory exists
-const dir = path.dirname(LOG_FILE);
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir, { recursive: true });
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
 /**
