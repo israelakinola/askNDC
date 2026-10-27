@@ -11,9 +11,10 @@ import { buildAnswer } from './answer.js';
  * 5. Build and return JSON answer
  *
  * @param {string} question - The user's question.
+ * @param {Array<{role: string, content: string}>} [history] - Previous conversation turns.
  * @returns {Promise<string>} JSON formatted answer.
  */
-export async function processQuestion(question) {
+export async function processQuestion(question, history = []) {
   // Validate
   if (question === null || question === undefined) throw new Error('question is required');
   if (typeof question !== 'string') throw new Error('question must be a string');
@@ -31,8 +32,8 @@ export async function processQuestion(question) {
   // Search
   const searchResults = await searchCombined(englishQuestion);
 
-  // Build answer
-  const answer = await buildAnswer(englishQuestion, searchResults);
+  // Build answer with history for context
+  const answer = await buildAnswer(englishQuestion, searchResults, history);
 
   return answer;
 }

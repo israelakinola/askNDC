@@ -12,6 +12,10 @@ const PORT = process.env.PORT || 3000;
 // Zod schemas
 const ChatRequest = z.object({
   question: z.string().min(1).max(1000).trim(),
+  history: z.array(z.object({
+    role: z.enum(['user', 'assistant']),
+    content: z.string(),
+  })).max(20).optional().default([]),
 });
 
 const ChatResponse = z.object({
@@ -60,7 +64,7 @@ app.post('/chat', async (req, res) => {
       });
     }
 
-    const answer = await processQuestion(parsed.data.question);
+    const answer = await processQuestion(parsed.data.question, parsed.data.history);
     const json = JSON.parse(answer);
 
     // Validate response shape

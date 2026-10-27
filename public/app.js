@@ -4,6 +4,7 @@ const CHAT_ENDPOINT = "/chat";
 
 let elements = {};
 let isSending = false;
+let conversationHistory = [];
 
 function initializeChat() {
   elements = {
@@ -67,7 +68,7 @@ async function sendMessage() {
     const res = await fetch(CHAT_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question }),
+      body: JSON.stringify({ question, history: conversationHistory }),
     });
 
     if (!res.ok) {
@@ -78,6 +79,11 @@ async function sendMessage() {
     const data = await res.json();
     loadingEl.remove();
     addAssistantMessage(data);
+
+    // Update conversation history
+    conversationHistory.push({ role: 'user', content: question });
+    conversationHistory.push({ role: 'assistant', content: data.Body });
+    if (conversationHistory.length > 10) conversationHistory = conversationHistory.slice(-10);
   } catch (err) {
     loadingEl.remove();
     addErrorMessage(err.message);
@@ -195,6 +201,7 @@ function scrollToBottom() {
 function resetChat() {
   elements.messages.replaceChildren();
   document.body.classList.remove("has-conversation");
+  conversationHistory = [];
 }
 
 function initThemeToggle() {
