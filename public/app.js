@@ -1,9 +1,7 @@
 "use strict";
 
 const CHAT_ENDPOINT = "/chat";
-const PROMPT_CHIPS_URL = "/prompt-chips.json";
 
-let promptChips = [];
 let elements = {};
 let isSending = false;
 
@@ -45,26 +43,6 @@ function initializeChat() {
 
   const isTouch = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches;
   if (!isTouch) elements.input.focus();
-
-  renderPromptChips();
-}
-
-function renderPromptChips() {
-  const containers = document.querySelectorAll("[data-chip-list]");
-  if (!containers.length) return;
-
-  const frag = document.createDocumentFragment();
-  promptChips.forEach((label) => {
-    const btn = document.createElement("button");
-    btn.className = "prompt-chip";
-    btn.type = "button";
-    btn.textContent = label;
-    frag.appendChild(btn.cloneNode(true));
-  });
-
-  containers.forEach((container) => {
-    container.replaceChildren(frag.cloneNode(true));
-  });
 }
 
 function autoGrowInput() {
@@ -80,6 +58,7 @@ async function sendMessage() {
   elements.input.value = "";
   autoGrowInput();
   setSending(true);
+  document.body.classList.add("has-conversation");
 
   addUserMessage(question);
   const loadingEl = showLoading();
@@ -104,7 +83,6 @@ async function sendMessage() {
     addErrorMessage(err.message);
   } finally {
     setSending(false);
-    document.body.classList.add("has-conversation");
   }
 }
 
@@ -190,7 +168,7 @@ function showLoading() {
 
   const text = document.createElement("span");
   text.className = "loading-text";
-  text.textContent = "Searching for answers";
+  text.textContent = "AskNDC is preparing an answer";
   bubble.appendChild(text);
 
   const indicator = document.createElement("span");
@@ -231,20 +209,7 @@ function initThemeToggle() {
   });
 }
 
-async function loadPromptChips() {
-  try {
-    const res = await fetch(PROMPT_CHIPS_URL);
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data)) promptChips = data;
-    }
-  } catch {
-    // keep defaults
-  }
-}
-
-document.addEventListener("DOMContentLoaded", async () => {
-  await loadPromptChips();
+document.addEventListener("DOMContentLoaded", () => {
   initializeChat();
   initThemeToggle();
 });
