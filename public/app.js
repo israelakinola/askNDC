@@ -104,6 +104,8 @@ async function sendMessage() {
   } finally {
     setSending(false);
     document.body.classList.add("has-conversation");
+    const mobileChips = document.getElementById("mobile-chips");
+    if (mobileChips) mobileChips.hidden = true;
   }
 }
 
@@ -216,6 +218,8 @@ function scrollToBottom() {
 function resetChat() {
   elements.messages.replaceChildren();
   document.body.classList.remove("has-conversation");
+  const mobileChips = document.getElementById("mobile-chips");
+  if (mobileChips) mobileChips.hidden = false;
 }
 
 function initThemeToggle() {
