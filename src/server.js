@@ -1,11 +1,26 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import { z } from 'zod';
 import { processQuestion } from './chat.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Zod schemas
+const ChatRequest = z.object({
+  question: z.string().min(1).max(1000).trim(),
+});
+
+const ChatResponse = z.object({
+  Title: z.string().min(1),
+  Body: z.string().min(1),
+  References: z.array(z.object({
+    title: z.string(),
+    url: z.string().url(),
+  })),
+});
 
 // Middleware
 app.use(express.json());
@@ -30,20 +45,36 @@ app.get('/health', (_req, res) => {
 // Chat endpoint
 app.post('/chat', async (req, res) => {
   try {
-    const { question } = req.body;
-
-    if (!question || typeof question !== 'string' || question.trim().length === 0) {
+    // Validate request
+    const parsed = ChatRequest.safeParse(req.body);
+    if (!parsed.success) {
       return res.status(400).json({
-        error: 'question is required and must be a non-empty string',
+        error: 'question is required and must be a non-empty string (max 1000 chars)',
       });
     }
 
-    const answer = await processQuestion(question.trim());
-    const parsed = JSON.parse(answer);
-    res.json(parsed);
+    const answer = await processQuestion(parsed.data.question);
+    const json = JSON.parse(answer);
+
+    // Validate response shape
+    const valid = ChatResponse.safeParse(json);
+    if (!valid.success) {
+      console.error('Invalid response shape:', valid.error.issues);
+      return res.status(500).json({
+        Title: 'Contact NDC',
+        Body: 'We could not find reliable information to answer your question. Please contact the NDC through its official contact channels for assistance.',
+        References: [],
+      });
+    }
+
+    res.json(valid.data);
   } catch (err) {
     console.error('Chat error:', err.message);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      Title: 'Contact NDC',
+      Body: 'We could not find reliable information to answer your question. Please contact the NDC through its official contact channels for assistance.',
+      References: [],
+    });
   }
 });
 
