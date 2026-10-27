@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Environment secrets
+.env
+
+# Data
+data/
+
+# Docker
+qdrant_storage/
+
+# IDE
+.vscode/
+.idea/

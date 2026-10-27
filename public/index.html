@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AskNDC — NDC Party AI Guide</title>
+  <meta name="description" content="Ask questions about the NDC political party in Nigeria. Get verified answers with references." />
+
+  <link rel="icon" type="image/jpeg" href="ndc-logo2.jpeg" />
+  <meta name="theme-color" content="#0b0f19" />
+
+  <script>
+    (function() {
+      var h = new Date().getHours();
+      var theme = localStorage.getItem('askndc-theme') || (h >= 7 && h < 19 ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', theme);
+      document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#ffffff' : '#0b0f19';
+    })();
+  </script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-logo" href="/"><img src="ndc-logo2.jpeg" alt="NDC" class="site-logo__img" /><span class="site-logo__prefix">ask</span><span class="site-logo__suffix">NDC</span></a>
+    <nav class="site-nav" aria-label="Site">
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/>
+          <path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 2v2M12 20v2M2 12h2M20 12h2M5.64 5.64l1.41 1.41M16.95 16.95l1.41 1.41M16.95 7.05l1.41-1.41M5.64 18.36l1.41-1.41"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </nav>
+  </header>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Shortcuts">
+      <button class="sidebar__new-chat" type="button" data-action="new-chat" aria-label="Start a new chat">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <span>New chat</span>
+      </button>
+
+      <section class="sidebar__section">
+        <h2 class="sidebar__title">Try asking</h2>
+        <div class="sidebar__chip-list" id="sidebar-chips"></div>
+      </section>
+    </aside>
+
+    <main class="chat-panel">
+      <div class="chat-content">
+        <section class="messages" id="messages" aria-live="polite" aria-label="Conversation"></section>
+
+        <div class="prompt-chips prompt-chips--mobile" id="mobile-chips" aria-label="Suggested questions"></div>
+
+        <form class="input-area" id="chat-form">
+          <div class="composer">
+            <textarea
+              id="chat-input"
+              class="chat-input"
+              placeholder="Ask about the NDC party"
+              rows="1"
+              maxlength="1000"
+              aria-label="Message"
+            ></textarea>
+            <button type="submit" id="send-button" class="send-button" aria-label="Send message">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+                <path d="M12 19V5M6 11l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
