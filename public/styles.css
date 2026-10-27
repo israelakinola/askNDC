@@ -376,6 +376,9 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
 .prompt-chips[hidden] { display: none; }
 
+body.has-conversation .prompt-chips { display: none; }
+body.has-conversation .sidebar__chip-list { display: none; }
+
 .prompt-chips--mobile { display: none; }
 
 @media (max-width: 900px) {
